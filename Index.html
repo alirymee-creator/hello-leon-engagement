@@ -1,0 +1,604 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#170526">
+<title>Hello Leon ❤️ | A Special Request</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --pink: #ff168d;
+  --purple: #9228ff;
+  --blue: #00d9ff;
+  --gold: #ffd65a;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: white;
+  background: #10071c url("leon.jpg") center center / cover fixed no-repeat;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    145deg,
+    rgba(15, 2, 32, .78),
+    rgba(5, 8, 30, .72),
+    rgba(53, 0, 50, .78)
+  );
+  z-index: -1;
+}
+
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: rgba(255,255,255,.15);
+  z-index: 20;
+}
+
+#progressFill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--pink), var(--gold), var(--blue));
+  transition: width .4s;
+}
+
+.topbar {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+}
+
+.music {
+  background: rgba(20,10,40,.8);
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 25px;
+  padding: 10px 14px;
+  color: white;
+}
+
+.container {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 540px;
+  margin: auto;
+  padding: 65px 18px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen {
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+
+.screen.active {
+  display: block;
+  animation: enter .55s ease;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateY(18px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+h1 {
+  font-size: clamp(38px, 10vw, 58px);
+  line-height: 1.12;
+  margin: 16px 0;
+  background: linear-gradient(90deg, #ff71ca, #ffe66b, #63eaff);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 0 0 24px rgba(255,22,141,.12);
+}
+
+h2 {
+  color: #ff9bda;
+  font-size: clamp(25px, 7vw, 34px);
+  margin: 15px 0;
+}
+
+p {
+  color: #fff8ff;
+  font-size: 17px;
+  line-height: 1.8;
+  margin: 14px 0;
+}
+
+.emoji {
+  font-size: 65px;
+  margin: 12px 0;
+  filter: drop-shadow(0 0 16px #ff168d);
+}
+
+.card {
+  padding: 24px 20px;
+  margin: 23px 0;
+  background: rgba(15, 5, 35, .65);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 25px;
+  box-shadow: 0 0 28px rgba(179,39,255,.22);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+}
+
+button {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 40px;
+  padding: 14px 22px;
+  margin: 7px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .2s, box-shadow .2s;
+}
+
+button:active {
+  transform: scale(.96);
+}
+
+.primary {
+  background: linear-gradient(110deg, #ff168d, #862cff, #008dff);
+  box-shadow: 0 0 22px rgba(150,30,255,.35);
+}
+
+.yes {
+  background: linear-gradient(110deg, #00db72, #009b63);
+  box-shadow: 0 0 20px rgba(0,255,130,.25);
+}
+
+.no {
+  background: linear-gradient(110deg, #ff3158, #dc006e);
+}
+
+.button-area {
+  position: relative;
+  height: 100px;
+  max-width: 390px;
+  margin: 25px auto;
+}
+
+#yesBtn, #noBtn {
+  position: absolute;
+  top: 8px;
+  white-space: nowrap;
+}
+
+#yesBtn {
+  left: 2%;
+}
+
+#noBtn {
+  left: 57%;
+}
+
+.small {
+  font-size: 13px;
+  opacity: .9;
+}
+
+.back {
+  background: rgba(255,255,255,.1);
+}
+
+#toast {
+  min-height: 25px;
+  color: #ffe1f5;
+  font-size: 14px;
+}
+
+footer {
+  font-size: 12px;
+  color: #e7d7ff;
+  margin-top: 25px;
+}
+
+.floating {
+  position: fixed;
+  bottom: -40px;
+  z-index: 0;
+  pointer-events: none;
+  animation: floatUp linear forwards;
+  filter: drop-shadow(0 0 5px rgba(255,50,180,.5));
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-115vh) rotate(35deg);
+    opacity: 0;
+  }
+}
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+@media (max-width: 380px) {
+  .container { padding-left: 12px; padding-right: 12px; }
+  .card { padding: 20px 15px; }
+  p { font-size: 15px; }
+  button { padding: 13px 17px; font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="progress">
+  <div id="progressFill"></div>
+</div>
+
+<div class="topbar">
+  <button class="music" id="musicBtn" onclick="toggleMusic()">
+    🎵 Play Music
+  </button>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<main class="container">
+
+<!-- SCREEN 1 -->
+<section class="screen active" id="s1">
+  <div class="emoji">👑💖</div>
+  <h1>Hello, Leon!</h1>
+  <p>A special message is waiting just for you.</p>
+  <div class="card">
+    <p>Today, I want to share something meaningful with you.</p>
+    <p>It's a little surprise from Ali, made with sincerity, hope, and respect. ❤️</p>
+  </div>
+  <button class="primary" onclick="go(2)">Open Your Surprise ✨ ➜</button>
+  <footer>Made with respect, especially for Leon.</footer>
+</section>
+
+<!-- SCREEN 2 -->
+<section class="screen" id="s2">
+  <div class="emoji">🤝💜</div>
+  <h2>Dear Leon</h2>
+  <div class="card">
+    <p>Before I ask you anything, I want to recognise the special place you have in Sasha's life.</p>
+    <p>A brother's advice, support, and care can mean so much.</p>
+    <p>That is why I want to approach you honestly and respectfully.</p>
+  </div>
+  <button class="back" onclick="go(1)">← Back</button>
+  <button class="primary" onclick="go(3)">Continue 💫</button>
+</section>
+
+<!-- SCREEN 3 -->
+<section class="screen" id="s3">
+  <div class="emoji">🌹❤️</div>
+  <h2>Allow Me to Introduce Myself</h2>
+  <div class="card">
+    <p>My name is <strong>Ali</strong>.</p>
+    <p>I care deeply about Sasha, and I would like to explore a serious future with her.</p>
+    <p>I know that love is not only about words. It is about kindness, responsibility, honesty, and showing up through actions.</p>
+  </div>
+  <button class="back" onclick="go(2)">← Back</button>
+  <button class="primary" onclick="go(4)">Read My Intention 💌</button>
+</section>
+
+<!-- SCREEN 4 -->
+<section class="screen" id="s4">
+  <div class="emoji">💍✨</div>
+  <h2>My Intention</h2>
+  <div class="card">
+    <p>Leon, I am thinking seriously about taking the next step with Sasha.</p>
+    <p>I want to approach the idea of engagement with maturity, patience, and respect for her family.</p>
+    <p>Most importantly, Sasha's own wishes and happiness must come first.</p>
+    <p>I would be grateful to hear your thoughts and seek your blessing.</p>
+  </div>
+  <button class="back" onclick="go(3)">← Back</button>
+  <button class="primary" onclick="go(5)">The Big Question 💖</button>
+</section>
+
+<!-- SCREEN 5 -->
+<section class="screen" id="s5">
+  <div class="emoji">👑💍</div>
+  <h1>Leon...</h1>
+  <div class="card">
+    <h2>Will you give me your blessing to pursue an engagement with your sister, Sasha?</h2>
+    <p>Your support would mean a lot to me. ❤️</p>
+  </div>
+
+  <div class="button-area" id="buttonArea">
+    <button class="yes" id="yesBtn" onclick="acceptRequest()">
+      ❤️ Yes
+    </button>
+    <button class="no" id="noBtn">
+      No 🙈
+    </button>
+  </div>
+
+  <p id="toast">Careful, Leon! One of these buttons is playful. 😄</p>
+  <p class="small">Every answer deserves respect.</p>
+  <button class="back" onclick="go(4)">← Read Again</button>
+</section>
+
+<!-- SCREEN 6 -->
+<section class="screen" id="s6">
+  <div class="emoji">🎉💚👑</div>
+  <h1>Thank You, Leon!</h1>
+  <div class="card">
+    <p>Thank you for being willing to hear me out.</p>
+    <p>Your support and advice mean a lot, and I appreciate the opportunity to approach this important step respectfully.</p>
+    <p>I will remember that Sasha's feelings and choices must always come first.</p>
+    <h2>Thank you! ❤️</h2>
+  </div>
+  <button class="primary" onclick="go(7)">One Last Message 💌</button>
+</section>
+
+<!-- SCREEN 7 -->
+<section class="screen" id="s7">
+  <div class="emoji">💌🌹</div>
+  <h2>A Message From Ali</h2>
+  <div class="card">
+    <p><strong>Dear Leon,</strong></p>
+    <p>Thank you for giving this message your time.</p>
+    <p>I know that considering an engagement is a serious matter. I want to approach it with honesty, kindness, patience, and respect for your family.</p>
+    <p>I cannot promise to be perfect, but I can promise to keep learning and to let my actions speak louder than my words.</p>
+    <p>I hope we can build understanding and trust as we move forward.</p>
+    <p><strong>With respect,</strong><br>Ali ❤️</p>
+  </div>
+  <button class="primary" onclick="go(8)">Final Surprise ✨</button>
+</section>
+
+<!-- SCREEN 8 -->
+<section class="screen" id="s8">
+  <div class="emoji">🌌💖</div>
+  <h1>The End...</h1>
+  <div class="card">
+    <p>Some messages come from the heart.</p>
+    <p>This one comes with hope, sincerity, and respect.</p>
+    <p>Thank you for listening, Leon.</p>
+    <p>May the future bring wisdom, happiness, and understanding to everyone involved.</p>
+    <h2>Ali & Sasha 💍</h2>
+  </div>
+  <button class="primary" onclick="go(1)">↻ Start Again</button>
+  <footer>Made with ❤️ for Leon.</footer>
+</section>
+
+<!-- RESPECTFUL NO SCREEN -->
+<section class="screen" id="s9">
+  <div class="emoji">💜🤝</div>
+  <h1>Thank You for Being Honest</h1>
+  <div class="card">
+    <p>Leon, thank you for sharing how you feel.</p>
+    <p>I respect your answer. I would still appreciate your advice, and I understand that trust takes time.</p>
+    <p>I hope we can continue speaking openly and respectfully.</p>
+    <h2>— Ali ❤️</h2>
+  </div>
+  <button class="primary" onclick="go(1)">Back to Start</button>
+</section>
+
+</main>
+
+<script>
+const screens = document.querySelectorAll(".screen");
+const progressFill = document.getElementById("progressFill");
+
+function go(n) {
+  screens.forEach(s => s.classList.remove("active"));
+  document.getElementById("s" + n).classList.add("active");
+
+  const total = 8;
+  progressFill.style.width =
+    (Math.min(n, total) - 1) / (total - 1) * 100 + "%";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function acceptRequest() {
+  go(6);
+  burstConfetti();
+}
+
+const noBtn = document.getElementById("noBtn");
+const area = document.getElementById("buttonArea");
+const toast = document.getElementById("toast");
+
+let escapeCount = 0;
+let lastMove = 0;
+
+const jokes = [
+  "Oops! That button is shy! 😂",
+  "Almost, Leon! Try again! 🏃",
+  "It's surprisingly fast! 😆",
+  "You nearly caught it! 🙈",
+  "Okay, this button is a champion runner! 😂"
+];
+
+function moveNoButton(event) {
+  if (event) event.preventDefault();
+
+  const now = Date.now();
+  if (now - lastMove < 180) return;
+  lastMove = now;
+
+  escapeCount++;
+
+  if (escapeCount >= 6) {
+    toast.textContent =
+      "The game is over! You can now choose Yes or No freely.";
+    noBtn.style.left = "57%";
+    noBtn.style.top = "8px";
+    escapeCount = 0;
+    noBtn.removeEventListener("pointerenter", moveNoButton);
+    noBtn.removeEventListener("pointerdown", moveNoButton);
+    return;
+  }
+
+  const maxX = Math.max(0, area.clientWidth - noBtn.offsetWidth);
+  const maxY = Math.max(0, area.clientHeight - noBtn.offsetHeight);
+
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+  toast.textContent = jokes[escapeCount - 1];
+}
+
+function declineRequest() {
+  go(9);
+}
+
+noBtn.addEventListener("pointerenter", moveNoButton);
+noBtn.addEventListener("pointerdown", moveNoButton);
+noBtn.addEventListener("click", declineRequest);
+
+// Floating hearts
+const heartSymbols = ["💖", "💕", "❤️", "✨", "🌹"];
+
+setInterval(() => {
+  const el = document.createElement("div");
+  el.className = "floating";
+  el.textContent =
+    heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+
+  el.style.left = Math.random() * 95 + "vw";
+  el.style.fontSize = 16 + Math.random() * 18 + "px";
+  el.style.animationDuration = 6 + Math.random() * 5 + "s";
+
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 12000);
+}, 800);
+
+// Simple optional music using the phone's built-in audio oscillator
+let audioContext = null;
+let musicTimer = null;
+let musicPlaying = false;
+let noteIndex = 0;
+
+function toggleMusic() {
+  const btn = document.getElementById("musicBtn");
+
+  if (musicPlaying) {
+    clearInterval(musicTimer);
+    musicPlaying = false;
+    btn.textContent = "🎵 Play Music";
+    if (audioContext) audioContext.suspend();
+    return;
+  }
+
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) {
+      btn.textContent = "Music unavailable";
+      return;
+    }
+
+    if (!audioContext) audioContext = new AudioCtx();
+    audioContext.resume();
+
+    const notes = [523, 659, 784, 659, 587, 698, 880, 698];
+
+    function playNote() {
+      if (!audioContext || audioContext.state !== "running") return;
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = notes[noteIndex % notes.length];
+      gain.gain.setValueAtTime(.0001, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        .06, audioContext.currentTime + .04
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        .0001, audioContext.currentTime + .35
+      );
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + .4);
+      noteIndex++;
+    }
+
+    playNote();
+    musicTimer = setInterval(playNote, 450);
+    musicPlaying = true;
+    btn.textContent = "🔇 Stop Music";
+  } catch (e) {
+    btn.textContent = "Music unavailable";
+  }
+}
+
+// Confetti celebration
+function burstConfetti() {
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = Array.from({ length: 130 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -Math.random() * canvas.height,
+    size: 4 + Math.random() * 6,
+    speed: 2 + Math.random() * 5,
+    spin: Math.random() * 6,
+    color: ["#ff168d", "#ffd65a", "#00d9ff", "#a855f7", "#00e676"][
+      Math.floor(Math.random() * 5)
+    ]
+  }));
+
+  let frames = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    pieces.forEach(p => {
+      p.y += p.speed;
+      p.x += Math.sin(p.spin) * 1.5;
+      p.spin += .04;
+
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size * 1.5);
+    });
+
+    frames++;
+    if (frames < 160) {
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  draw();
+}
+</script>
+
+</body>
+</html>
